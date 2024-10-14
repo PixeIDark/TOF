@@ -45,7 +45,8 @@ function DrawInterface({ choiceItem, choiceColor }: DrawInterfaceProps) {
         min="0"
         placeholder="win"
       />
-      <p>probability</p>
+      <p>probability:</p>
+      <button>start!</button>
     </div>
   );
 }
