@@ -1,0 +1,17 @@
+.body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  inset: 0;
+  background-color: black;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: skyblue;
+  width: 800px;
+  height: 800px;
+}
