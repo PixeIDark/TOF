@@ -5,3 +5,16 @@
   width: 144px;
   align-items: start;
 }
+
+.drawInterface_Button {
+  background-color: violet;
+  color: white;
+  width: 148px;
+  height: 40px;
+  font-size: 24px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+}

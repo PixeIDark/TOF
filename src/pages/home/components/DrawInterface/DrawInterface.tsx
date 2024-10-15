@@ -8,6 +8,9 @@ type DrawInterfaceProps = {
 };
 
 // 색깔과 칩이냐 그거냐에 따라 다른 함수를 써야해. 걍 깡으로 함수 5개 만들고 공통된 거 알아서 통합 ㄱㄱ
+// chanceValue = 몇뽑
+// winValue = 몇번 나오는가
+// 골코먼저
 function DrawInterface({ choiceItem, choiceColor }: DrawInterfaceProps) {
   const [chanceValue, setChanceValue] = useState<number | "">("");
   const [winValue, setWinValue] = useState<number | "">("");
@@ -46,7 +49,7 @@ function DrawInterface({ choiceItem, choiceColor }: DrawInterfaceProps) {
         placeholder="win"
       />
       <p>probability:</p>
-      <button>start!</button>
+      <button className={css.drawInterface_Button}>start!</button>
     </div>
   );
 }
