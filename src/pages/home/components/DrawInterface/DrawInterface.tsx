@@ -1,6 +1,7 @@
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { ChoiceItem } from "../../home";
 import css from "./drawInterface.module.css";
+import { goldCoreProbability } from "./utils";
 
 type DrawInterfaceProps = {
   choiceItem: ChoiceItem;
@@ -14,6 +15,7 @@ type DrawInterfaceProps = {
 function DrawInterface({ choiceItem, choiceColor }: DrawInterfaceProps) {
   const [chanceValue, setChanceValue] = useState<number | "">("");
   const [winValue, setWinValue] = useState<number | "">("");
+  const [probability, setProbability] = useState<number | null>(null);
 
   const handleInputChange =
     (setter: Dispatch<SetStateAction<number | "">>) =>
@@ -32,6 +34,12 @@ function DrawInterface({ choiceItem, choiceColor }: DrawInterfaceProps) {
       }
     };
 
+  const handleSubmit = (chance: number | "", win: number | "") => {
+    if (typeof chance !== "number" || typeof win !== "number") return;
+    const result = goldCoreProbability(chance, win);
+    setProbability(result);
+  };
+
   return (
     <div className={css.drawInterface}>
       <input
@@ -48,8 +56,13 @@ function DrawInterface({ choiceItem, choiceColor }: DrawInterfaceProps) {
         min="0"
         placeholder="win"
       />
-      <p>probability:</p>
-      <button className={css.drawInterface_Button}>start!</button>
+      <p>probability:{probability ?? ""}</p>
+      <button
+        onClick={() => handleSubmit(chanceValue, winValue)}
+        className={css.drawInterface_Button}
+      >
+        start!
+      </button>
     </div>
   );
 }
