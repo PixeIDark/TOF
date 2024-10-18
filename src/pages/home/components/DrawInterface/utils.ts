@@ -20,19 +20,70 @@ function logBinomialProbability(n: number, k: number, p: number): number {
   return logCombination(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p);
 }
 
-// 패패승 승승패 넣어야함
-export function goldCoreProbability(n: number, k: number): number {
+const calculatorType = {
+  redCore: [3 / 400, 0, (n: number) => Math.floor(n / 120)],
+  yellowCore: [
+    3 / 400,
+    (n: number) => Math.floor(n / 80),
+    (n: number) => Math.floor(n / 120),
+  ],
+  blackCore: [3 / 1000, 0, (n: number) => Math.floor(n / 1200)],
+  redChip: [17 / 1000, 0, (n: number) => Math.floor(n / 80)],
+  yellowChip: [
+    17 / 1000,
+    (n: number) => Math.floor(n / 40),
+    (n: number) => Math.floor(n / 80),
+  ],
+};
+
+const deathAndLife = (n: number, color: string) => {
+  const murderer = color === "redCore" ? 80 : 40;
+  const destiny = Math.floor(n / murderer);
+  let rule = [];
+  let redK = 0;
+
+  for (let i = 0; i < destiny; i++) {
+    if (rule.length >= 2 && rule[i - 2] === rule[i - 1]) {
+      if ((rule[i - 1] = "패")) {
+        rule.push("승");
+        redK++;
+      }
+      if ((rule[i - 1] = "승")) rule.push("패");
+      continue;
+    }
+
+    const random = Math.random();
+    if (random < 0.5) rule.push("패");
+    if (random >= 0.5) {
+      rule.push("승");
+      redK++;
+    }
+  }
+
+  return redK;
+};
+
+export function probabilityCalculate(
+  n: number,
+  k: number,
+  color: string
+): number {
+  console.log(color);
   let totalProbability = 0;
-  const p = 3 / 400; // 한 번의 시도에서 성공할 확률
-  const perfectChance = Math.floor(n / 80);
-  const mileage = Math.floor(n / 120);
+  let [p, a, b] = calculatorType[color];
+  let perfectChance = typeof a === "function" ? a(n) : a;
+  const mileage = b(n);
+  if (color[0] === "r") perfectChance += deathAndLife(n, color);
   k = k - perfectChance - mileage;
-  console.log(k);
+
   if (k <= 0) return 100;
 
-  // k번 이상 성공할 확률을 계산
   for (let i = k; i <= n; i++) {
-    totalProbability += Math.exp(logBinomialProbability(n, i, p));
+    if (color === "redChip" && i === 40) {
+      totalProbability += Math.exp(logBinomialProbability(n, i, 0));
+    } else if (color === "redCore" && i === 80) {
+      totalProbability += Math.exp(logBinomialProbability(n, i, 0));
+    } else totalProbability += Math.exp(logBinomialProbability(n, i, p));
   }
 
   return parseFloat((totalProbability * 100).toFixed(10));

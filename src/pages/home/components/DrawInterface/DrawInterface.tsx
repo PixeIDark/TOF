@@ -1,7 +1,7 @@
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { ChoiceItem } from "../../home";
 import css from "./drawInterface.module.css";
-import { goldCoreProbability } from "./utils";
+import { probabilityCalculate } from "./utils";
 
 type DrawInterfaceProps = {
   choiceItem: ChoiceItem;
@@ -36,7 +36,7 @@ function DrawInterface({ choiceItem, choiceColor }: DrawInterfaceProps) {
 
   const handleSubmit = (chance: number | "", win: number | "") => {
     if (typeof chance !== "number" || typeof win !== "number") return;
-    const result = goldCoreProbability(chance, win);
+    const result = probabilityCalculate(chance, win, choiceColor);
     setProbability(result);
   };
 
