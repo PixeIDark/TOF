@@ -36,54 +36,56 @@ const calculatorType = {
   ],
 };
 
-const deathAndLife = (n: number, color: string) => {
-  const murderer = color === "redCore" ? 80 : 40;
-  const destiny = Math.floor(n / murderer);
-  let rule = [];
-  let redK = 0;
+// const deathAndLife = (n: number, color: string) => {
+//   const murderer = color === "redCore" ? 80 : 40;
+//   const destiny = Math.floor(n / murderer);
+//   let rule = [];
+//   let redK = 0;
 
-  for (let i = 0; i < destiny; i++) {
-    if (rule.length >= 2 && rule[i - 2] === rule[i - 1]) {
-      if ((rule[i - 1] = "패")) {
-        rule.push("승");
-        redK++;
-      }
-      if ((rule[i - 1] = "승")) rule.push("패");
-      continue;
-    }
+//   for (let i = 0; i < destiny; i++) {
+//     if (rule.length >= 2 && rule[i - 2] === rule[i - 1]) {
+//       if ((rule[i - 1] = "패")) {
+//         rule.push("승");
+//         redK++;
+//       }
+//       if ((rule[i - 1] = "승")) rule.push("패");
+//       continue;
+//     }
 
-    const random = Math.random();
-    if (random < 0.5) rule.push("패");
-    if (random >= 0.5) {
-      rule.push("승");
-      redK++;
-    }
-  }
+//     const random = Math.random();
+//     if (random < 0.5) rule.push("패");
+//     if (random >= 0.5) {
+//       rule.push("승");
+//       redK++;
+//     }
+//   }
 
-  return redK;
-};
+//   return redK;
+// };
 
 export function probabilityCalculate(
   n: number,
   k: number,
   color: string
 ): number {
-  console.log(color);
   let totalProbability = 0;
-  let [p, a, b] = calculatorType[color];
+  let [p, a, b] = calculatorType[color]; // 씹억까
   let perfectChance = typeof a === "function" ? a(n) : a;
   const mileage = b(n);
-  if (color[0] === "r") perfectChance += deathAndLife(n, color);
+  // if (color[0] === "r") perfectChance += deathAndLife(n, color);
   k = k - perfectChance - mileage;
 
   if (k <= 0) return 100;
 
   for (let i = k; i <= n; i++) {
-    if (color === "redChip" && i === 40) {
-      totalProbability += Math.exp(logBinomialProbability(n, i, 0));
-    } else if (color === "redCore" && i === 80) {
-      totalProbability += Math.exp(logBinomialProbability(n, i, 0));
-    } else totalProbability += Math.exp(logBinomialProbability(n, i, p));
+    let currentP = p;
+    if (
+      (color === "redCore" && i % 80 === 0) ||
+      (color === "redChip" && i % 40 === 0)
+    ) {
+      currentP = 0.5;
+    }
+    totalProbability += Math.exp(logBinomialProbability(n, i, currentP));
   }
 
   return parseFloat((totalProbability * 100).toFixed(10));
